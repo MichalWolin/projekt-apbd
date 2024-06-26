@@ -19,7 +19,12 @@ public class PersonCustomerService : IPersonCustomerService
 
     public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
     {
-        EnsureEveryFieldIsFilled(newPersonCustomerDto);
+        EnsureAddressIsNotEmpty(newPersonCustomerDto.Address);
+        EnsureEmailIsNotEmpty(newPersonCustomerDto.Email);
+        EnsurePhoneNumberIsNotEmpty(newPersonCustomerDto.PhoneNumber);
+        EnsureFirstNameIsNotEmpty(newPersonCustomerDto.FirstName);
+        EnsureLastNameIsNotEmpty(newPersonCustomerDto.LastName);
+        EnsurePeselIsNotEmpty(newPersonCustomerDto.Pesel);
 
         EnsurePeselIsDigitsOnly(newPersonCustomerDto);
         EnsurePeselLengthIsCorrect(newPersonCustomerDto);
@@ -37,44 +42,86 @@ public class PersonCustomerService : IPersonCustomerService
     public async Task DeletePersonCustomer(int id)
     {
         Customer? customer = await _customerRepository.GetCustomer(id);
-        EnsureCustomerExists(customer);
+        EnsureCustomerExists(id, customer);
 
+        EnsureCustomerIsNotDeleted(customer!);
+        EnsureCustomerIsNotCompany(customer!);
+
+        await _customerRepository.DeletePersonCustomer(customer!);
+    }
+
+    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    {
+        Customer? customer = await _customerRepository.GetCustomer(id);
+        EnsureCustomerExists(id, customer);
         EnsureCustomerIsNotDeleted(customer);
         EnsureCustomerIsNotCompany(customer);
 
-        await _customerRepository.DeletePersonCustomer(customer);
+        if (updatePersonCustomerDto.Address is not null)
+            EnsureAddressIsNotEmpty(updatePersonCustomerDto.Address);
+        if (updatePersonCustomerDto.Email is not null)
+        {
+            EnsureEmailIsNotEmpty(updatePersonCustomerDto.Email);
+            EnsureEmailIsCorrect(updatePersonCustomerDto.Email);
+        }
+        if (updatePersonCustomerDto.PhoneNumber is not null)
+        {
+            EnsurePhoneNumberIsDigitsOnly(updatePersonCustomerDto.PhoneNumber);
+            EnsurePhoneNumberLengthIsCorrect(updatePersonCustomerDto.PhoneNumber);
+        }
+        if (updatePersonCustomerDto.FirstName is not null)
+            EnsureFirstNameIsNotEmpty(updatePersonCustomerDto.FirstName);
+        if (updatePersonCustomerDto.LastName is not null)
+            EnsureLastNameIsNotEmpty(updatePersonCustomerDto.LastName);
+
+        return await _customerRepository.UpdatePersonCustomer(id, updatePersonCustomerDto);
     }
 
-    private static void EnsureEveryFieldIsFilled(NewPersonCustomerDto newPersonCustomerDto)
+    private static void EnsureAddressIsNotEmpty(String address)
     {
-        if (string.IsNullOrEmpty(newPersonCustomerDto.Address))
+        if (string.IsNullOrEmpty(address))
         {
-            throw new DomainException("Address must be filled!");
+            throw new DomainException("Address cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newPersonCustomerDto.Email))
+    private static void EnsureEmailIsNotEmpty(String email)
+    {
+        if (string.IsNullOrEmpty(email))
         {
-            throw new DomainException("Email must be filled!");
+            throw new DomainException("Email cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newPersonCustomerDto.PhoneNumber))
+    private static void EnsurePhoneNumberIsNotEmpty(String phoneNumber)
+    {
+        if (string.IsNullOrEmpty(phoneNumber))
         {
-            throw new DomainException("Phone number must be filled!");
+            throw new DomainException("Phone number cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newPersonCustomerDto.FirstName))
+    private static void EnsureFirstNameIsNotEmpty(String firstName)
+    {
+        if (string.IsNullOrEmpty(firstName))
         {
-            throw new DomainException("First name must be filled!");
+            throw new DomainException("First name cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newPersonCustomerDto.LastName))
+    private static void EnsureLastNameIsNotEmpty(String lastName)
+    {
+        if (string.IsNullOrEmpty(lastName))
         {
-            throw new DomainException("Last name must be filled!");
+            throw new DomainException("Last name cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newPersonCustomerDto.Pesel))
+    private static void EnsurePeselIsNotEmpty(String pesel)
+    {
+        if (string.IsNullOrEmpty(pesel))
         {
-            throw new DomainException("PESEL must be filled!");
+            throw new DomainException("PESEL cannot be empty!");
         }
     }
 
@@ -126,11 +173,11 @@ public class PersonCustomerService : IPersonCustomerService
         }
     }
 
-    private static void EnsureCustomerExists(Customer? customer)
+    private static void EnsureCustomerExists(int id, Customer? customer)
     {
         if (customer is null)
         {
-            throw new DomainException("Customer does not exist!");
+            throw new DomainException("Customer with id {id} does not exist!");
         }
     }
 
@@ -146,7 +193,7 @@ public class PersonCustomerService : IPersonCustomerService
     {
         if (customer.CompanyId != null)
         {
-            throw new DomainException("Companies cannot be deleted!");
+            throw new DomainException("Companies cannot be deleted or modified by this endpoint!");
         }
     }
 }

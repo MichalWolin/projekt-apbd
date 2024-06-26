@@ -19,7 +19,11 @@ public class CompanyCustomerService : ICompanyCustomerService
 
     public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
     {
-        EnsureEveryFieldIsFilled(newCompanyCustomerDto);
+        EnsureAddressIsNotEmpty(newCompanyCustomerDto.Address);
+        EnsureEmailIsNotEmpty(newCompanyCustomerDto.Email);
+        EnsurePhoneNumberIsNotEmpty(newCompanyCustomerDto.PhoneNumber);
+        EnsureNameIsNotEmpty(newCompanyCustomerDto.Name);
+        EnsureKrsIsNotEmpty(newCompanyCustomerDto.Krs);
 
         EnsureKrsIsDigitsOnly(newCompanyCustomerDto);
         EnsureKrsLengthIsCorrect(newCompanyCustomerDto);
@@ -39,14 +43,23 @@ public class CompanyCustomerService : ICompanyCustomerService
     {
         Customer? customer = await _customerRepository.GetCustomer(id);
         EnsureCustomerExists(id, customer);
+        EnsureCustomerIsCompany(customer);
 
+        if (updateCustomerCompanyDto.Address is not null)
+            EnsureAddressIsNotEmpty(updateCustomerCompanyDto.Address);
         if (updateCustomerCompanyDto.Email is not null)
+        {
+            EnsureEmailIsNotEmpty(updateCustomerCompanyDto.Email);
             EnsureEmailIsCorrect(updateCustomerCompanyDto.Email);
+        }
         if (updateCustomerCompanyDto.PhoneNumber is not null)
         {
+            EnsurePhoneNumberIsNotEmpty(updateCustomerCompanyDto.PhoneNumber);
             EnsurePhoneNumberIsDigitsOnly(updateCustomerCompanyDto.PhoneNumber);
             EnsurePhoneNumberLengthIsCorrect(updateCustomerCompanyDto.PhoneNumber);
         }
+        if (updateCustomerCompanyDto.Name is not null)
+            EnsureNameIsNotEmpty(updateCustomerCompanyDto.Name);
 
         return await _customerRepository.UpdateCompanyCustomer(id, updateCustomerCompanyDto);
     }
@@ -99,31 +112,43 @@ public class CompanyCustomerService : ICompanyCustomerService
         }
     }
 
-    private static void EnsureEveryFieldIsFilled(NewCompanyCustomerDto newCompanyCustomerDto)
+    private static void EnsureAddressIsNotEmpty(String address)
     {
-        if (string.IsNullOrEmpty(newCompanyCustomerDto.Address))
+        if (string.IsNullOrEmpty(address))
         {
-            throw new DomainException("Address must be filled!");
+            throw new DomainException("Address cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newCompanyCustomerDto.Email))
+    private static void EnsureEmailIsNotEmpty(String email)
+    {
+        if (string.IsNullOrEmpty(email))
         {
-            throw new DomainException("Email must be filled!");
+            throw new DomainException("Email cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newCompanyCustomerDto.PhoneNumber))
+    private static void EnsurePhoneNumberIsNotEmpty(String phoneNumber)
+    {
+        if (string.IsNullOrEmpty(phoneNumber))
         {
-            throw new DomainException("Phone number must be filled!");
+            throw new DomainException("Phone number cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newCompanyCustomerDto.Name))
+    private static void EnsureNameIsNotEmpty(String name)
+    {
+        if (string.IsNullOrEmpty(name))
         {
-            throw new DomainException("Name must be filled!");
+            throw new DomainException("Name cannot be empty!");
         }
+    }
 
-        if (string.IsNullOrEmpty(newCompanyCustomerDto.Krs))
+    private static void EnsureKrsIsNotEmpty(String krs)
+    {
+        if (string.IsNullOrEmpty(krs))
         {
-            throw new DomainException("KRS must be filled!");
+            throw new DomainException("KRS cannot be empty!");
         }
     }
 
@@ -132,6 +157,14 @@ public class CompanyCustomerService : ICompanyCustomerService
         if (customer is null)
         {
             throw new DomainException($"Customer with id {id} does not exist!");
+        }
+    }
+
+    private static void EnsureCustomerIsCompany(Customer customer)
+    {
+        if (customer.PersonId is not null)
+        {
+            throw new DomainException($"Customer with id {customer.CustomerId} is not a company!");
         }
     }
 }

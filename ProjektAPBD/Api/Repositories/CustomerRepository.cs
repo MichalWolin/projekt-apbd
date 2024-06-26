@@ -112,9 +112,41 @@ public class CustomerRepository : ICustomerRepository
         };
     }
 
-    public Task DeletePersonCustomer(Customer customer)
+    public async Task DeletePersonCustomer(Customer customer)
     {
         customer.IsDeleted = true;
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    {
+        var customer = await _context.Customers
+            .Include(c => c.Person)
+            .FirstOrDefaultAsync(c => c.CustomerId.Equals(id));
+
+        if (updatePersonCustomerDto.Address is not null)
+            customer!.Address = updatePersonCustomerDto.Address;
+        if (updatePersonCustomerDto.Email is not null)
+            customer!.Email = updatePersonCustomerDto.Email;
+        if (updatePersonCustomerDto.PhoneNumber is not null)
+            customer!.PhoneNumber = updatePersonCustomerDto.PhoneNumber;
+        if (updatePersonCustomerDto.FirstName is not null)
+            customer!.Person!.FirstName = updatePersonCustomerDto.FirstName;
+        if (updatePersonCustomerDto.LastName is not null)
+            customer!.Person!.LastName = updatePersonCustomerDto.LastName;
+
+        await _context.SaveChangesAsync();
+
+        return new PersonCustomerDto
+        {
+            CustomerId = customer!.CustomerId,
+            Address = customer!.Address,
+            Email = customer!.Email,
+            PhoneNumber = customer!.PhoneNumber,
+            PersonId = customer!.Person!.PersonId,
+            FirstName = customer!.Person!.FirstName,
+            LastName = customer!.Person!.LastName,
+            Pesel = customer!.Person!.Pesel
+        };
     }
 }

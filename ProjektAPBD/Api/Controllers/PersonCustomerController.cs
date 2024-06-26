@@ -22,6 +22,12 @@ public class PersonCustomerController : ControllerBase
         return Ok(await _personCustomerService.CreatePersonCustomer(newPersonCustomerDto));
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    {
+        return Ok(await _personCustomerService.UpdatePersonCustomer(id, updatePersonCustomerDto));
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePersonCustomer(int id)
     {
