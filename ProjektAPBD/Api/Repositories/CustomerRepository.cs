@@ -111,4 +111,10 @@ public class CustomerRepository : ICustomerRepository
             LastName = customer.Person.LastName
         };
     }
+
+    public Task DeletePersonCustomer(Customer customer)
+    {
+        customer.IsDeleted = true;
+        return _context.SaveChangesAsync();
+    }
 }

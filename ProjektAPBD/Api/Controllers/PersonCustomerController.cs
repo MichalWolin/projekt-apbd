@@ -21,4 +21,12 @@ public class PersonCustomerController : ControllerBase
     {
         return Ok(await _personCustomerService.CreatePersonCustomer(newPersonCustomerDto));
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePersonCustomer(int id)
+    {
+        await _personCustomerService.DeletePersonCustomer(id);
+
+        return Ok($"Customer with id {id} has been deleted.");
+    }
 }

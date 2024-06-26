@@ -10,4 +10,5 @@ public interface ICustomerRepository
     Task<Customer?> GetCustomer(int id);
     Task<CompanyCustomerDto> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto);
     Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto);
+    Task DeletePersonCustomer(Customer customer);
 }
