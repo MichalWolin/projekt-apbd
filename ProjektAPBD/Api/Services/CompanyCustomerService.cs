@@ -19,7 +19,7 @@ public class CompanyCustomerService : ICompanyCustomerService
 
     public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
     {
-        EnsureEveryDataIsFilled(newCompanyCustomerDto);
+        EnsureEveryFieldIsFilled(newCompanyCustomerDto);
 
         EnsureKrsIsDigitsOnly(newCompanyCustomerDto);
         EnsureKrsLengthIsCorrect(newCompanyCustomerDto);
@@ -99,25 +99,29 @@ public class CompanyCustomerService : ICompanyCustomerService
         }
     }
 
-    private static void EnsureEveryDataIsFilled(NewCompanyCustomerDto newCompanyCustomerDto)
+    private static void EnsureEveryFieldIsFilled(NewCompanyCustomerDto newCompanyCustomerDto)
     {
         if (string.IsNullOrEmpty(newCompanyCustomerDto.Address))
         {
             throw new DomainException("Address must be filled!");
         }
-        else if (string.IsNullOrEmpty(newCompanyCustomerDto.Email))
+
+        if (string.IsNullOrEmpty(newCompanyCustomerDto.Email))
         {
             throw new DomainException("Email must be filled!");
         }
-        else if (string.IsNullOrEmpty(newCompanyCustomerDto.PhoneNumber))
+
+        if (string.IsNullOrEmpty(newCompanyCustomerDto.PhoneNumber))
         {
             throw new DomainException("Phone number must be filled!");
         }
-        else if (string.IsNullOrEmpty(newCompanyCustomerDto.Name))
+
+        if (string.IsNullOrEmpty(newCompanyCustomerDto.Name))
         {
             throw new DomainException("Name must be filled!");
         }
-        else if (string.IsNullOrEmpty(newCompanyCustomerDto.Krs))
+
+        if (string.IsNullOrEmpty(newCompanyCustomerDto.Krs))
         {
             throw new DomainException("KRS must be filled!");
         }

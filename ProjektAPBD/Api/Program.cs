@@ -18,9 +18,11 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // repositories
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 // services
 builder.Services.AddScoped<ICompanyCustomerService, CompanyCustomerService>();
+builder.Services.AddScoped<IPersonCustomerService, PersonCustomerService>();
 
 var app = builder.Build();
 

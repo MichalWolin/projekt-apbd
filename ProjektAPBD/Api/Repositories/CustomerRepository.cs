@@ -80,4 +80,35 @@ public class CustomerRepository : ICustomerRepository
             Krs = customer!.Company!.Krs
         };
     }
+
+    public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
+    {
+        var customer = new Customer
+        {
+            Address = newPersonCustomerDto.Address,
+            Email = newPersonCustomerDto.Email,
+            PhoneNumber = newPersonCustomerDto.PhoneNumber,
+            Person = new Person
+            {
+                Pesel = newPersonCustomerDto.Pesel,
+                FirstName = newPersonCustomerDto.FirstName,
+                LastName = newPersonCustomerDto.LastName
+            }
+        };
+
+        await _context.Customers.AddAsync(customer);
+        await _context.SaveChangesAsync();
+
+        return new PersonCustomerDto
+        {
+            CustomerId = customer.CustomerId,
+            Address = customer.Address,
+            Email = customer.Email,
+            PhoneNumber = customer.PhoneNumber,
+            PersonId = customer.Person.PersonId,
+            Pesel = customer.Person.Pesel,
+            FirstName = customer.Person.FirstName,
+            LastName = customer.Person.LastName
+        };
+    }
 }
