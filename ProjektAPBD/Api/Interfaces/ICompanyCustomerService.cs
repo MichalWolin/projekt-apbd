@@ -5,5 +5,6 @@ namespace Api.Interfaces;
 
 public interface ICompanyCustomerService
 {
-    Task<CreatedCompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto);
+    Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto);
+    Task<CompanyCustomerDto> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto);
 }

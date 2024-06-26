@@ -1,6 +1,6 @@
 ﻿namespace Api.ResponseModels;
 
-public class CreatedCompanyCustomerDto
+public class CompanyCustomerDto
 {
     public int CustomerId { get; set; }
     public string Address { get; set; }

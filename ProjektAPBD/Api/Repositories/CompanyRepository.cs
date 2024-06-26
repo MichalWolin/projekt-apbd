@@ -14,7 +14,6 @@ public class CompanyRepository : ICompanyRepository
         _context = context;
     }
 
-
     public async Task<Company?> GetCompany(string krs)
     {
         return await _context.Companies.FirstOrDefaultAsync(c => c.Krs.Equals(krs));

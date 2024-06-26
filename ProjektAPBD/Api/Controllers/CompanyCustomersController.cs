@@ -20,4 +20,10 @@ public class CompanyCustomersController : ControllerBase
     {
         return Ok(await _companyCustomerService.CreateCompanyCustomer(newCompanyCustomerDto));
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto)
+    {
+        return Ok(await _companyCustomerService.UpdateCompanyCustomer(id, updateCustomerCompanyDto));
+    }
 }

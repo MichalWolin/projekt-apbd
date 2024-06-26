@@ -1,9 +1,12 @@
-﻿using Api.RequestModels;
+﻿using Api.Models;
+using Api.RequestModels;
 using Api.ResponseModels;
 
 namespace Api.Interfaces;
 
 public interface ICustomerRepository
 {
-    Task<CreatedCompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto);
+    Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto);
+    Task<Customer?> GetCustomer(int id);
+    Task<CompanyCustomerDto> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto);
 }

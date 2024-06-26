@@ -1,8 +1,10 @@
 ﻿using Api.Data;
+using Api.Exceptions;
 using Api.Interfaces;
 using Api.Models;
 using Api.RequestModels;
 using Api.ResponseModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
 
@@ -15,7 +17,7 @@ public class CustomerRepository : ICustomerRepository
         _context = context;
     }
 
-    public async Task<CreatedCompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
+    public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
     {
         var customer = new Customer
         {
@@ -32,7 +34,7 @@ public class CustomerRepository : ICustomerRepository
         await _context.Customers.AddAsync(customer);
         await _context.SaveChangesAsync();
 
-        return new CreatedCompanyCustomerDto
+        return new CompanyCustomerDto
         {
             CustomerId = customer.CustomerId,
             Address = customer.Address,
@@ -41,6 +43,41 @@ public class CustomerRepository : ICustomerRepository
             CompanyId = customer.Company.CompanyId,
             Name = customer.Company.Name,
             Krs = customer.Company.Krs
+        };
+    }
+
+    public async Task<Customer?> GetCustomer(int id)
+    {
+        return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId.Equals(id));
+    }
+
+    public async Task<CompanyCustomerDto> UpdateCompanyCustomer(int id,
+                                                                UpdateCustomerCompanyDto updateCustomerCompanyDto)
+    {
+        var customer = await _context.Customers
+            .Include(c => c.Company)
+            .FirstOrDefaultAsync(c => c.CustomerId.Equals(id));
+
+        if (updateCustomerCompanyDto.Address is not null)
+            customer!.Address = updateCustomerCompanyDto.Address;
+        if (updateCustomerCompanyDto.Email is not null)
+            customer!.Email = updateCustomerCompanyDto.Email;
+        if (updateCustomerCompanyDto.PhoneNumber is not null)
+            customer!.PhoneNumber = updateCustomerCompanyDto.PhoneNumber;
+        if  (updateCustomerCompanyDto.Name is not null)
+            customer!.Company!.Name = updateCustomerCompanyDto.Name;
+
+        await _context.SaveChangesAsync();
+
+        return new CompanyCustomerDto
+        {
+            CustomerId = customer!.CustomerId,
+            Address = customer!.Address,
+            Email = customer!.Email,
+            PhoneNumber = customer!.PhoneNumber,
+            CompanyId = customer!.Company!.CompanyId,
+            Name = customer!.Company!.Name,
+            Krs = customer!.Company!.Krs
         };
     }
 }
