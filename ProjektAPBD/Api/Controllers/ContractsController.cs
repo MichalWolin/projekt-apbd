@@ -20,4 +20,10 @@ public class ContractsController : ControllerBase
     {
         return Ok(await _contractService.CreateContract(newContractDto));
     }
+
+    [HttpPost("pay")]
+    public async Task<IActionResult> PayForContract(PaymentRequestDto paymentRequestDto)
+    {
+        return Ok(await _contractService.PayForContract(paymentRequestDto));
+    }
 }

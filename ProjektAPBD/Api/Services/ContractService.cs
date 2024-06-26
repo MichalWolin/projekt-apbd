@@ -50,6 +50,25 @@ public class ContractService : IContractService
         return await _contractRepository.CreateContract(newContractDto, price, discount);
     }
 
+    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto)
+    {
+        EnsureAmountIsPositive(paymentRequestDto.Amount);
+
+        Customer? customer = await _customerRepository.GetCustomer(paymentRequestDto.CustomerId);
+        EnsureCustomerExists(customer, paymentRequestDto.CustomerId);
+        EnsureCustomerIsNotDeleted(customer!);
+
+        Contract? contract = await _contractRepository.GetContract(paymentRequestDto.ContractId);
+        EnsureContractExists(contract, paymentRequestDto.ContractId);
+        EnsureContractBelongsToCustomer(contract, paymentRequestDto.CustomerId);
+        EnsureContractIsNotSigned(contract);
+        EnsureContractIsBeforeDeadline(contract);
+
+        EnsureAmountIsValid(paymentRequestDto.Amount, contract);
+
+        return await _contractRepository.PayForContract(paymentRequestDto);
+    }
+
     private static void EnsureSoftwareExists(Software? software, int softwareId)
     {
         if (software is null)
@@ -120,6 +139,55 @@ public class ContractService : IContractService
         if (customer.IsDeleted)
         {
             throw new DomainException("Customer is deleted!");
+        }
+    }
+
+    private static void EnsureAmountIsPositive(decimal amount)
+    {
+        if (amount <= 0)
+        {
+            throw new DomainException("Amount must be more than 0!");
+        }
+    }
+
+    private static void EnsureContractExists(Contract? contract, int contractId)
+    {
+        if (contract is null)
+        {
+            throw new DomainException($"Contract with id {contractId} does not exist!");
+        }
+    }
+
+    private static void EnsureContractBelongsToCustomer(Contract contract, int customerId)
+    {
+        if (contract.CustomerId != customerId)
+        {
+            throw new DomainException($"Contract with id {contract.ContractId} " +
+                                      $"does not belong to customer with id {customerId}!");
+        }
+    }
+
+    private static void EnsureContractIsNotSigned(Contract contract)
+    {
+        if (contract.Signed)
+        {
+            throw new DomainException($"Contract with id {contract.ContractId} is already signed!");
+        }
+    }
+
+    private static void EnsureContractIsBeforeDeadline(Contract contract)
+    {
+        if (contract.SupportEndDate < DateTime.Now)
+        {
+            throw new DomainException($"Contract with id {contract.ContractId} is past the deadline!");
+        }
+    }
+
+    private static void EnsureAmountIsValid(decimal amount, Contract contract)
+    {
+        if (amount > contract.Price - contract.Paid)
+        {
+            throw new DomainException("Amount is more than the remaining price!");
         }
     }
 }

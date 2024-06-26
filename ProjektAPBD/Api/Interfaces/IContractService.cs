@@ -6,4 +6,5 @@ namespace Api.Interfaces;
 public interface IContractService
 {
     Task<ContractDto> CreateContract(NewContractDto newContractDto);
+    Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto);
 }

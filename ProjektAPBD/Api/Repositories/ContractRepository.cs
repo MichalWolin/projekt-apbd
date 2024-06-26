@@ -63,4 +63,30 @@ public class ContractRepository : IContractRepository
             SupportEndDate = contract.SupportEndDate,
         };
     }
+
+    public async Task<Contract?> GetContract(int contractId)
+    {
+        return await _context.Contracts
+            .FirstOrDefaultAsync(c => c.ContractId.Equals(contractId));
+    }
+
+    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto)
+    {
+        var contract = await _context.Contracts
+            .FirstOrDefaultAsync(c => c.ContractId.Equals(paymentRequestDto.ContractId));
+
+        contract.Paid += paymentRequestDto.Amount;
+
+        if (contract.Paid >= contract.Price)
+            contract.Signed = true;
+
+        await _context.SaveChangesAsync();
+
+        return new PaymentResponseDto
+        {
+            ContractId = contract.ContractId,
+            Paid = contract.Paid,
+            Price = contract.Price,
+        };
+    }
 }

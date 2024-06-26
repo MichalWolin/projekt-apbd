@@ -9,4 +9,6 @@ public interface IContractRepository
     Task<Contract?> GetCustomersContract(int customerId, int softwareId);
     Task<bool> IsCustomerReturning(int customerId);
     Task<ContractDto> CreateContract(NewContractDto newContractDto, decimal price, int discount);
+    Task<Contract?> GetContract(int contractId);
+    Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto);
 }
