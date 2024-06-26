@@ -15,6 +15,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.Address).HasMaxLength(100).IsRequired();
         builder.Property(c => c.Email).HasMaxLength(100).IsRequired();
         builder.Property(c => c.PhoneNumber).HasMaxLength(20).IsRequired();
+        builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
         builder.HasOne(c => c.Person)
             .WithOne(p => p.Customer)
@@ -36,7 +37,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
                 Address = "ul. Testowa 1, 00-001 Warszawa",
                 Email = "jan@kowalski.com",
                 PhoneNumber = "123456789",
-                PersonId = 1
+                PersonId = 1,
+                IsDeleted = false
             },
             new Customer
             {
@@ -44,7 +46,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
                 Address = "ul. Testowa 2, 00-002 Warszawa",
                 Email = "frugo@frugo.com",
                 PhoneNumber = "987654321",
-                CompanyId = 1
+                CompanyId = 1,
+                IsDeleted = false
             }
         });
     }

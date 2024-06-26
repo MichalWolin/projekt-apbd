@@ -102,13 +102,13 @@ namespace Api.Migrations
                         {
                             ContractId = 1,
                             CustomerId = 1,
-                            EndDate = new DateTime(2024, 7, 28, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2024, 7, 29, 0, 0, 0, 0, DateTimeKind.Local),
                             Paid = 100m,
                             Price = 100m,
                             Signed = true,
                             SoftwareId = 1,
-                            StartDate = new DateTime(2024, 6, 28, 0, 0, 0, 0, DateTimeKind.Local),
-                            SupportEndDate = new DateTime(2025, 6, 28, 0, 0, 0, 0, DateTimeKind.Local)
+                            StartDate = new DateTime(2024, 6, 29, 0, 0, 0, 0, DateTimeKind.Local),
+                            SupportEndDate = new DateTime(2025, 6, 29, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -132,6 +132,11 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
@@ -159,6 +164,7 @@ namespace Api.Migrations
                             CustomerId = 1,
                             Address = "ul. Testowa 1, 00-001 Warszawa",
                             Email = "jan@kowalski.com",
+                            IsDeleted = false,
                             PersonId = 1,
                             PhoneNumber = "123456789"
                         },
@@ -168,6 +174,7 @@ namespace Api.Migrations
                             Address = "ul. Testowa 2, 00-002 Warszawa",
                             CompanyId = 1,
                             Email = "frugo@frugo.com",
+                            IsDeleted = false,
                             PhoneNumber = "987654321"
                         });
                 });
@@ -208,19 +215,19 @@ namespace Api.Migrations
                         {
                             DiscountId = 1,
                             Description = "Discount for new customers",
-                            EndDate = new DateTime(2024, 7, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2024, 7, 26, 0, 0, 0, 0, DateTimeKind.Local),
                             Rate = 10,
                             SoftwareId = 1,
-                            StartDate = new DateTime(2024, 5, 26, 0, 0, 0, 0, DateTimeKind.Local)
+                            StartDate = new DateTime(2024, 5, 27, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             DiscountId = 2,
                             Description = "Discount for new customers",
-                            EndDate = new DateTime(2024, 5, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2024, 5, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Rate = 20,
                             SoftwareId = 2,
-                            StartDate = new DateTime(2024, 4, 26, 0, 0, 0, 0, DateTimeKind.Local)
+                            StartDate = new DateTime(2024, 4, 27, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -370,21 +377,21 @@ namespace Api.Migrations
                         {
                             UserId = 1,
                             Login = "admin",
-                            Password = "kQmYM7XBosOKQRJEidga97V1oOkEVY6+k1VnqncMzyo=",
-                            RefreshToken = "E1VK+RnDKK7rTA7UYAbDBbrEZ7O4+XUFbx8Vujk+ld4=",
-                            RefreshTokenExpiration = new DateTime(2024, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Password = "CrnyJzGKqI2hdJjjj/fVvFF1DE1IxzuqFp8GIPwMSPQ=",
+                            RefreshToken = "P6a+lj6MQn3fv4YNEnw9n71NzebLYGIwJSezNa1F+bg=",
+                            RefreshTokenExpiration = new DateTime(2024, 6, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Role = "admin",
-                            Salt = "l0LQzgdl4y9jOe7GdE0WlQ=="
+                            Salt = "3/VW5z1kkOo+uUFfALuMTQ=="
                         },
                         new
                         {
                             UserId = 2,
                             Login = "user",
-                            Password = "t+TDMxNWmj4mTDqFgYjbcZNVtSugVLQb0kAGNRy6H6I=",
-                            RefreshToken = "SWuhQB6L59ORKuuaXuIIdH5eavs0bWQiRjsWleMz3HI=",
-                            RefreshTokenExpiration = new DateTime(2024, 6, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            Password = "NGdQGRBVlul5nqSLofzx3Rs9+nwtkf5h7xoFdsyYtP0=",
+                            RefreshToken = "U8qdfReIHnSeXRU5j4Qvb+Mkl88uHvyxUs97bmgyEmA=",
+                            RefreshTokenExpiration = new DateTime(2024, 6, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Role = "user",
-                            Salt = "zBSi5J0QVgifBwQY+hyO2A=="
+                            Salt = "5ph7adtYHPSVyTWuYDDmcQ=="
                         });
                 });
 

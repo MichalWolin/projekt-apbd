@@ -86,6 +86,7 @@ namespace Api.Migrations
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     PersonId = table.Column<int>(type: "int", nullable: true),
                     CompanyId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -186,8 +187,8 @@ namespace Api.Migrations
                 columns: new[] { "UserId", "Login", "Password", "RefreshToken", "RefreshTokenExpiration", "Role", "Salt" },
                 values: new object[,]
                 {
-                    { 1, "admin", "kQmYM7XBosOKQRJEidga97V1oOkEVY6+k1VnqncMzyo=", "E1VK+RnDKK7rTA7UYAbDBbrEZ7O4+XUFbx8Vujk+ld4=", new DateTime(2024, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "admin", "l0LQzgdl4y9jOe7GdE0WlQ==" },
-                    { 2, "user", "t+TDMxNWmj4mTDqFgYjbcZNVtSugVLQb0kAGNRy6H6I=", "SWuhQB6L59ORKuuaXuIIdH5eavs0bWQiRjsWleMz3HI=", new DateTime(2024, 6, 26, 0, 0, 0, 0, DateTimeKind.Local), "user", "zBSi5J0QVgifBwQY+hyO2A==" }
+                    { 1, "admin", "CrnyJzGKqI2hdJjjj/fVvFF1DE1IxzuqFp8GIPwMSPQ=", "P6a+lj6MQn3fv4YNEnw9n71NzebLYGIwJSezNa1F+bg=", new DateTime(2024, 6, 27, 0, 0, 0, 0, DateTimeKind.Local), "admin", "3/VW5z1kkOo+uUFfALuMTQ==" },
+                    { 2, "user", "NGdQGRBVlul5nqSLofzx3Rs9+nwtkf5h7xoFdsyYtP0=", "U8qdfReIHnSeXRU5j4Qvb+Mkl88uHvyxUs97bmgyEmA=", new DateTime(2024, 6, 27, 0, 0, 0, 0, DateTimeKind.Local), "user", "5ph7adtYHPSVyTWuYDDmcQ==" }
                 });
 
             migrationBuilder.InsertData(
@@ -204,14 +205,14 @@ namespace Api.Migrations
                 columns: new[] { "DiscountId", "Description", "EndDate", "Rate", "SoftwareId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, "Discount for new customers", new DateTime(2024, 7, 25, 0, 0, 0, 0, DateTimeKind.Local), 10, 1, new DateTime(2024, 5, 26, 0, 0, 0, 0, DateTimeKind.Local) },
-                    { 2, "Discount for new customers", new DateTime(2024, 5, 26, 0, 0, 0, 0, DateTimeKind.Local), 20, 2, new DateTime(2024, 4, 26, 0, 0, 0, 0, DateTimeKind.Local) }
+                    { 1, "Discount for new customers", new DateTime(2024, 7, 26, 0, 0, 0, 0, DateTimeKind.Local), 10, 1, new DateTime(2024, 5, 27, 0, 0, 0, 0, DateTimeKind.Local) },
+                    { 2, "Discount for new customers", new DateTime(2024, 5, 27, 0, 0, 0, 0, DateTimeKind.Local), 20, 2, new DateTime(2024, 4, 27, 0, 0, 0, 0, DateTimeKind.Local) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Contracts",
                 columns: new[] { "ContractId", "CustomerId", "EndDate", "Paid", "Price", "Signed", "SoftwareId", "StartDate", "SupportEndDate" },
-                values: new object[] { 1, 1, new DateTime(2024, 7, 28, 0, 0, 0, 0, DateTimeKind.Local), 100m, 100m, true, 1, new DateTime(2024, 6, 28, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 6, 28, 0, 0, 0, 0, DateTimeKind.Local) });
+                values: new object[] { 1, 1, new DateTime(2024, 7, 29, 0, 0, 0, 0, DateTimeKind.Local), 100m, 100m, true, 1, new DateTime(2024, 6, 29, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2025, 6, 29, 0, 0, 0, 0, DateTimeKind.Local) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_CustomerId",

@@ -6,6 +6,7 @@ public class Customer
     public string Address { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
     public int? PersonId { get; set; }
     public int? CompanyId { get; set; }
 
