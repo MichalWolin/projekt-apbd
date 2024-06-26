@@ -19,10 +19,14 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
 
 // services
 builder.Services.AddScoped<ICompanyCustomerService, CompanyCustomerService>();
 builder.Services.AddScoped<IPersonCustomerService, PersonCustomerService>();
+builder.Services.AddScoped<IContractService, ContractService>();
 
 var app = builder.Build();
 
