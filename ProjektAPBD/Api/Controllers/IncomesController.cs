@@ -17,9 +17,9 @@ public class IncomesController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetIncome(int? softwareId, bool anticipatedIncomes = false,
-                                                string currency = "PLN")
+    public async Task<IActionResult> GetIncome(int? softwareId, CancellationToken cancellationToken,
+        bool anticipatedIncomes = false, string currency = "PLN")
     {
-        return Ok(await _incomeService.GetIncome(softwareId, anticipatedIncomes, currency));
+        return Ok(await _incomeService.GetIncome(softwareId, anticipatedIncomes, currency, cancellationToken));
     }
 }

@@ -23,12 +23,12 @@ public class UserService : IUserService
         _configuration = configuration;
     }
 
-    public async Task<TokensDto> Login(LoginRequestDto loginRequestDto)
+    public async Task<TokensDto> Login(LoginRequestDto loginRequestDto, CancellationToken cancellationToken)
     {
         EnsureLoginIsNotEmpty(loginRequestDto.Login);
         EnsurePasswordIsNotEmpty(loginRequestDto.Password);
 
-        User? user = await _userRepository.GetUser(loginRequestDto.Login);
+        User? user = await _userRepository.GetUser(loginRequestDto.Login, cancellationToken);
         EnsureUserExists(user, loginRequestDto.Login);
 
         var dbPasswordHash = user.Password;
@@ -55,7 +55,7 @@ public class UserService : IUserService
 
         user.RefreshToken = SecurityHelpers.GenerateRefreshToken();
         user.RefreshTokenExpiration = DateTime.Now.AddDays(1);
-        await _userRepository.SaveChanges();
+        await _userRepository.SaveChanges(cancellationToken);
 
         return new TokensDto
         {
@@ -64,9 +64,9 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<TokensDto> Refresh(RefreshTokenDto refreshTokenDto)
+    public async Task<TokensDto> Refresh(RefreshTokenDto refreshTokenDto, CancellationToken cancellationToken)
     {
-        User? user = await _userRepository.GetUserByRefreshToken(refreshTokenDto.RefreshToken);
+        User? user = await _userRepository.GetUserByRefreshToken(refreshTokenDto.RefreshToken, cancellationToken);
         EnsureUserExists(user);
 
         EnsureTokenIsValid(user.RefreshTokenExpiration);
@@ -90,7 +90,7 @@ public class UserService : IUserService
 
         user.RefreshToken = SecurityHelpers.GenerateRefreshToken();
         user.RefreshTokenExpiration = DateTime.Now.AddDays(1);
-        await _userRepository.SaveChanges();
+        await _userRepository.SaveChanges(cancellationToken);
 
         return new TokensDto
         {

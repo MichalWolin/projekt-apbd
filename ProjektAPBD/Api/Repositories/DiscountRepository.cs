@@ -13,7 +13,7 @@ public class DiscountRepository : IDiscountRepository
         _context = context;
     }
 
-    public async Task<int> GetDiscount(int softwareId)
+    public async Task<int> GetDiscount(int softwareId, CancellationToken cancellationToken)
     {
         var discount = await _context.Discounts
             .Where(d => d.SoftwareId

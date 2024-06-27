@@ -19,23 +19,25 @@ public class PersonCustomerController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
+    public async Task<IActionResult> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _personCustomerService.CreatePersonCustomer(newPersonCustomerDto));
+        return Ok(await _personCustomerService.CreatePersonCustomer(newPersonCustomerDto, cancellationToken));
     }
 
     [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    public async Task<IActionResult> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _personCustomerService.UpdatePersonCustomer(id, updatePersonCustomerDto));
+        return Ok(await _personCustomerService.UpdatePersonCustomer(id, updatePersonCustomerDto, cancellationToken));
     }
 
     [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePersonCustomer(int id)
+    public async Task<IActionResult> DeletePersonCustomer(int id, CancellationToken cancellationToken)
     {
-        await _personCustomerService.DeletePersonCustomer(id);
+        await _personCustomerService.DeletePersonCustomer(id, cancellationToken);
 
         return Ok($"Customer with id {id} has been deleted.");
     }

@@ -18,15 +18,16 @@ public class ContractsController : ControllerBase
 
     [Authorize]
     [HttpPost("add")]
-    public async Task<IActionResult> CreateContract(NewContractDto newContractDto)
+    public async Task<IActionResult> CreateContract(NewContractDto newContractDto, CancellationToken cancellationToken)
     {
-        return Ok(await _contractService.CreateContract(newContractDto));
+        return Ok(await _contractService.CreateContract(newContractDto, cancellationToken));
     }
 
     [Authorize]
     [HttpPost("pay")]
-    public async Task<IActionResult> PayForContract(PaymentRequestDto paymentRequestDto)
+    public async Task<IActionResult> PayForContract(PaymentRequestDto paymentRequestDto,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _contractService.PayForContract(paymentRequestDto));
+        return Ok(await _contractService.PayForContract(paymentRequestDto, cancellationToken));
     }
 }

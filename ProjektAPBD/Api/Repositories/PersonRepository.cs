@@ -16,7 +16,7 @@ public class PersonRepository : IPersonRepository
         _context = context;
     }
 
-    public async Task<Person?> GetPerson(string pesel)
+    public async Task<Person?> GetPerson(string pesel, CancellationToken cancellationToken)
     {
         return await _context.Persons.FirstOrDefaultAsync(p => p.Pesel.Equals(pesel));
     }

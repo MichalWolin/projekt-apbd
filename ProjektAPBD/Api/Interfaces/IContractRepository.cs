@@ -6,11 +6,12 @@ namespace Api.Interfaces;
 
 public interface IContractRepository
 {
-    Task<Contract?> GetCustomersContract(int customerId, int softwareId);
-    Task<bool> IsCustomerReturning(int customerId);
-    Task<ContractDto> CreateContract(NewContractDto newContractDto, decimal price, int discount);
-    Task<Contract?> GetContract(int contractId);
-    Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto);
-    Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes);
-    Task<decimal> GetWholeIncome(bool anticipatedIncomes);
+    Task<Contract?> GetCustomersContract(int customerId, int softwareId, CancellationToken cancellationToken);
+    Task<bool> IsCustomerReturning(int customerId, CancellationToken cancellationToken);
+    Task<ContractDto> CreateContract(NewContractDto newContractDto, decimal price, int discount,
+        CancellationToken cancellationToken);
+    Task<Contract?> GetContract(int contractId, CancellationToken cancellationToken);
+    Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto, CancellationToken cancellationToken);
+    Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes, CancellationToken cancellationToken);
+    Task<decimal> GetWholeIncome(bool anticipatedIncomes, CancellationToken cancellationToken);
 }

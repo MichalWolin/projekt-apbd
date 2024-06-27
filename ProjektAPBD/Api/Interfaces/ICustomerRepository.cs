@@ -6,10 +6,16 @@ namespace Api.Interfaces;
 
 public interface ICustomerRepository
 {
-    Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto);
-    Task<Customer?> GetCustomer(int id);
-    Task<CompanyCustomerDto> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto);
-    Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto);
-    Task DeletePersonCustomer(Customer customer);
-    Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto);
+    Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto,
+        CancellationToken cancellationToken);
+    Task<Customer?> GetCustomer(int id,
+        CancellationToken cancellationToken);
+    Task<CompanyCustomerDto> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto,
+        CancellationToken cancellationToken);
+    Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto,
+        CancellationToken cancellationToken);
+    Task DeletePersonCustomer(Customer customer,
+        CancellationToken cancellationToken);
+    Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto,
+        CancellationToken cancellationToken);
 }

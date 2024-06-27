@@ -16,7 +16,8 @@ public class ContractRepository : IContractRepository
         _context = context;
     }
 
-    public async Task<Contract?> GetCustomersContract(int customerId, int softwareId)
+    public async Task<Contract?> GetCustomersContract(int customerId, int softwareId,
+        CancellationToken cancellationToken)
     {
         var contract = await _context.Contracts
             .FirstOrDefaultAsync(c => c.CustomerId.Equals(customerId) && c.SoftwareId.Equals(softwareId)
@@ -25,7 +26,7 @@ public class ContractRepository : IContractRepository
         return contract;
     }
 
-    public async Task<bool> IsCustomerReturning(int customerId)
+    public async Task<bool> IsCustomerReturning(int customerId, CancellationToken cancellationToken)
     {
         var result = await _context.Contracts
             .AnyAsync(c => c.CustomerId.Equals(customerId) && c.Signed.Equals(true));
@@ -33,7 +34,8 @@ public class ContractRepository : IContractRepository
         return result;
     }
 
-    public async Task<ContractDto> CreateContract(NewContractDto newContractDto, decimal price, int discount)
+    public async Task<ContractDto> CreateContract(NewContractDto newContractDto, decimal price, int discount,
+        CancellationToken cancellationToken)
     {
         var additionalSupport = newContractDto.AdditionalSupport ?? 0;
 
@@ -64,13 +66,14 @@ public class ContractRepository : IContractRepository
         };
     }
 
-    public async Task<Contract?> GetContract(int contractId)
+    public async Task<Contract?> GetContract(int contractId, CancellationToken cancellationToken)
     {
         return await _context.Contracts
             .FirstOrDefaultAsync(c => c.ContractId.Equals(contractId));
     }
 
-    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto)
+    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto,
+        CancellationToken cancellationToken)
     {
         var contract = await _context.Contracts
             .FirstOrDefaultAsync(c => c.ContractId.Equals(paymentRequestDto.ContractId));
@@ -90,7 +93,8 @@ public class ContractRepository : IContractRepository
         };
     }
 
-    public async Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes)
+    public async Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes,
+        CancellationToken cancellationToken)
     {
         var incomeFromSignedContracts = await _context.Contracts
             .Where(c => c.SoftwareId.Equals(softwareId) && c.Signed.Equals(true))
@@ -109,7 +113,7 @@ public class ContractRepository : IContractRepository
         return incomeFromSignedContracts;
     }
 
-    public async Task<decimal> GetWholeIncome(bool anticipatedIncomes)
+    public async Task<decimal> GetWholeIncome(bool anticipatedIncomes, CancellationToken cancellationToken)
     {
         var incomeFromSignedContracts = await _context.Contracts
             .Where(c => c.Signed.Equals(true))

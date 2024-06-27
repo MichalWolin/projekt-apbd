@@ -6,5 +6,5 @@ namespace Api.Interfaces;
 
 public interface IPersonRepository
 {
-    Task<Person?> GetPerson(string pesel);
+    Task<Person?> GetPerson(string pesel, CancellationToken cancellationToken);
 }

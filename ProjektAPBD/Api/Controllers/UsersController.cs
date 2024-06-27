@@ -16,14 +16,14 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequestDto loginRequestDto)
+    public async Task<IActionResult> Login(LoginRequestDto loginRequestDto, CancellationToken cancellationToken)
     {
-        return Ok(await _userService.Login(loginRequestDto));
+        return Ok(await _userService.Login(loginRequestDto, cancellationToken));
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenDto refreshTokenDto)
+    public async Task<IActionResult> Refresh(RefreshTokenDto refreshTokenDto, CancellationToken cancellationToken)
     {
-        return Ok(await _userService.Refresh(refreshTokenDto));
+        return Ok(await _userService.Refresh(refreshTokenDto, cancellationToken));
     }
 }

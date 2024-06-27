@@ -18,15 +18,17 @@ public class CompanyCustomersController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
+    public async Task<IActionResult> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _companyCustomerService.CreateCompanyCustomer(newCompanyCustomerDto));
+        return Ok(await _companyCustomerService.CreateCompanyCustomer(newCompanyCustomerDto, cancellationToken));
     }
 
     [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto)
+    public async Task<IActionResult> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _companyCustomerService.UpdateCompanyCustomer(id, updateCustomerCompanyDto));
+        return Ok(await _companyCustomerService.UpdateCompanyCustomer(id, updateCustomerCompanyDto, cancellationToken));
     }
 }

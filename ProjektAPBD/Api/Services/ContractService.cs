@@ -22,17 +22,17 @@ public class ContractService : IContractService
         _discountRepository = discountRepository;
     }
 
-    public async Task<ContractDto> CreateContract(NewContractDto newContractDto)
+    public async Task<ContractDto> CreateContract(NewContractDto newContractDto, CancellationToken cancellationToken)
     {
-        Software? software = await _softwareRepository.GetSoftware(newContractDto.SoftwareId);
+        Software? software = await _softwareRepository.GetSoftware(newContractDto.SoftwareId, cancellationToken);
         EnsureSoftwareExists(software, newContractDto.SoftwareId);
 
-        Customer? customer = await _customerRepository.GetCustomer(newContractDto.CustomerId);
+        Customer? customer = await _customerRepository.GetCustomer(newContractDto.CustomerId, cancellationToken);
         EnsureCustomerExists(customer, newContractDto.CustomerId);
         EnsureCustomerIsNotDeleted(customer!);
 
         Contract? contract = await _contractRepository
-                                .GetCustomersContract(newContractDto.CustomerId, newContractDto.SoftwareId);
+            .GetCustomersContract(newContractDto.CustomerId, newContractDto.SoftwareId, cancellationToken);
         EnsureCustomerDoesntHaveExistingContractForSoftware(contract,
                                                         newContractDto.CustomerId, newContractDto.SoftwareId);
 
@@ -43,22 +43,23 @@ public class ContractService : IContractService
         EnsureAdditionalSupportIsValid(newContractDto);
 
         var price = software.Price;
-        var discount = await _discountRepository.GetDiscount(newContractDto.SoftwareId);
-        if (await _contractRepository.IsCustomerReturning(customer.CustomerId))
+        var discount = await _discountRepository.GetDiscount(newContractDto.SoftwareId, cancellationToken);
+        if (await _contractRepository.IsCustomerReturning(customer.CustomerId, cancellationToken))
             discount += 5;
 
-        return await _contractRepository.CreateContract(newContractDto, price, discount);
+        return await _contractRepository.CreateContract(newContractDto, price, discount, cancellationToken);
     }
 
-    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto)
+    public async Task<PaymentResponseDto> PayForContract(PaymentRequestDto paymentRequestDto,
+        CancellationToken cancellationToken)
     {
         EnsureAmountIsPositive(paymentRequestDto.Amount);
 
-        Customer? customer = await _customerRepository.GetCustomer(paymentRequestDto.CustomerId);
+        Customer? customer = await _customerRepository.GetCustomer(paymentRequestDto.CustomerId, cancellationToken);
         EnsureCustomerExists(customer, paymentRequestDto.CustomerId);
         EnsureCustomerIsNotDeleted(customer!);
 
-        Contract? contract = await _contractRepository.GetContract(paymentRequestDto.ContractId);
+        Contract? contract = await _contractRepository.GetContract(paymentRequestDto.ContractId, cancellationToken);
         EnsureContractExists(contract, paymentRequestDto.ContractId);
         EnsureContractBelongsToCustomer(contract, paymentRequestDto.CustomerId);
         EnsureContractIsNotSigned(contract);
@@ -66,7 +67,7 @@ public class ContractService : IContractService
 
         EnsureAmountIsValid(paymentRequestDto.Amount, contract);
 
-        return await _contractRepository.PayForContract(paymentRequestDto);
+        return await _contractRepository.PayForContract(paymentRequestDto, cancellationToken);
     }
 
     private static void EnsureSoftwareExists(Software? software, int softwareId)

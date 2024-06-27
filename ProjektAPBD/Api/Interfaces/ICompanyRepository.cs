@@ -4,5 +4,5 @@ namespace Api.Interfaces;
 
 public interface ICompanyRepository
 {
-    Task<Company?> GetCompany(string krs);
+    Task<Company?> GetCompany(string krs, CancellationToken cancellationToken);
 }

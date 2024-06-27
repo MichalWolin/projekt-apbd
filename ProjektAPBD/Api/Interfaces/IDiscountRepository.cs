@@ -2,5 +2,5 @@
 
 public interface IDiscountRepository
 {
-    Task<int> GetDiscount(int softwareId);
+    Task<int> GetDiscount(int softwareId, CancellationToken cancellationToken);
 }

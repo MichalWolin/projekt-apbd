@@ -17,7 +17,8 @@ public class PersonCustomerService : IPersonCustomerService
         _customerRepository = customerRepository;
     }
 
-    public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
+    public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto,
+        CancellationToken cancellationToken)
     {
         EnsureAddressIsNotEmpty(newPersonCustomerDto.Address);
         EnsureEmailIsNotEmpty(newPersonCustomerDto.Email);
@@ -29,30 +30,31 @@ public class PersonCustomerService : IPersonCustomerService
         EnsurePeselIsDigitsOnly(newPersonCustomerDto);
         EnsurePeselLengthIsCorrect(newPersonCustomerDto);
 
-        Person? person = await _personRepository.GetPerson(newPersonCustomerDto.Pesel);
+        Person? person = await _personRepository.GetPerson(newPersonCustomerDto.Pesel, cancellationToken);
         EnsurePersonDoesNotExist(newPersonCustomerDto, person);
 
         EnsureEmailIsCorrect(newPersonCustomerDto.Email);
         EnsurePhoneNumberIsDigitsOnly(newPersonCustomerDto.PhoneNumber);
         EnsurePhoneNumberLengthIsCorrect(newPersonCustomerDto.PhoneNumber);
 
-        return await _customerRepository.CreatePersonCustomer(newPersonCustomerDto);
+        return await _customerRepository.CreatePersonCustomer(newPersonCustomerDto, cancellationToken);
     }
 
-    public async Task DeletePersonCustomer(int id)
+    public async Task DeletePersonCustomer(int id, CancellationToken cancellationToken)
     {
-        Customer? customer = await _customerRepository.GetCustomer(id);
+        Customer? customer = await _customerRepository.GetCustomer(id, cancellationToken);
         EnsureCustomerExists(id, customer);
 
         EnsureCustomerIsNotDeleted(customer!);
         EnsureCustomerIsNotCompany(customer!);
 
-        await _customerRepository.DeletePersonCustomer(customer!);
+        await _customerRepository.DeletePersonCustomer(customer!, cancellationToken);
     }
 
-    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto,
+        CancellationToken cancellationToken)
     {
-        Customer? customer = await _customerRepository.GetCustomer(id);
+        Customer? customer = await _customerRepository.GetCustomer(id, cancellationToken);
         EnsureCustomerExists(id, customer);
         EnsureCustomerIsNotDeleted(customer);
         EnsureCustomerIsNotCompany(customer);
@@ -74,7 +76,7 @@ public class PersonCustomerService : IPersonCustomerService
         if (updatePersonCustomerDto.LastName is not null)
             EnsureLastNameIsNotEmpty(updatePersonCustomerDto.LastName);
 
-        return await _customerRepository.UpdatePersonCustomer(id, updatePersonCustomerDto);
+        return await _customerRepository.UpdatePersonCustomer(id, updatePersonCustomerDto, cancellationToken);
     }
 
     private static void EnsureAddressIsNotEmpty(String address)

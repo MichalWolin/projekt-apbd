@@ -17,7 +17,8 @@ public class CustomerRepository : ICustomerRepository
         _context = context;
     }
 
-    public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
+    public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto,
+        CancellationToken cancellationToken)
     {
         var customer = new Customer
         {
@@ -46,13 +47,13 @@ public class CustomerRepository : ICustomerRepository
         };
     }
 
-    public async Task<Customer?> GetCustomer(int id)
+    public async Task<Customer?> GetCustomer(int id, CancellationToken cancellationToken)
     {
         return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId.Equals(id));
     }
 
     public async Task<CompanyCustomerDto> UpdateCompanyCustomer(int id,
-                                                                UpdateCustomerCompanyDto updateCustomerCompanyDto)
+        UpdateCustomerCompanyDto updateCustomerCompanyDto, CancellationToken cancellationToken)
     {
         var customer = await _context.Customers
             .Include(c => c.Company)
@@ -81,7 +82,8 @@ public class CustomerRepository : ICustomerRepository
         };
     }
 
-    public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
+    public async Task<PersonCustomerDto> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto,
+        CancellationToken cancellationToken)
     {
         var customer = new Customer
         {
@@ -112,13 +114,14 @@ public class CustomerRepository : ICustomerRepository
         };
     }
 
-    public async Task DeletePersonCustomer(Customer customer)
+    public async Task DeletePersonCustomer(Customer customer, CancellationToken cancellationToken)
     {
         customer.IsDeleted = true;
         await _context.SaveChangesAsync();
     }
 
-    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
+    public async Task<PersonCustomerDto> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto,
+        CancellationToken cancellationToken)
     {
         var customer = await _context.Customers
             .Include(c => c.Person)

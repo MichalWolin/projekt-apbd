@@ -17,19 +17,20 @@ public class IncomeService : IIncomeService
         _softwareRepository = softwareRepository;
     }
 
-    public async Task<IncomeDto> GetIncome(int? softwareId, bool anticipatedIncomes, string currency)
+    public async Task<IncomeDto> GetIncome(int? softwareId, bool anticipatedIncomes, string currency,
+        CancellationToken cancellationToken)
     {
         decimal currencyRate = 1;
         if (!currency.Equals("PLN"))
         {
             EnsureCurrenyIsValid(currency);
-            currencyRate = await GetCurrencyRate(currency);
+            currencyRate = await GetCurrencyRate(currency, cancellationToken);
         }
 
 
         if (softwareId is null)
         {
-            var income = await GetWholeIncome(anticipatedIncomes);
+            var income = await GetWholeIncome(anticipatedIncomes, cancellationToken);
             return new IncomeDto
             {
                 Amount = income  * currencyRate,
@@ -38,7 +39,7 @@ public class IncomeService : IIncomeService
         }
         else
         {
-            var income = await GetIncomeForSoftware(softwareId.Value, anticipatedIncomes);
+            var income = await GetIncomeForSoftware(softwareId.Value, anticipatedIncomes, cancellationToken);
             return new IncomeDto
             {
                 SoftwareId = softwareId,
@@ -48,19 +49,21 @@ public class IncomeService : IIncomeService
         }
     }
 
-    private async Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes)
+    private async Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes,
+        CancellationToken cancellationToken)
     {
-        Software? software = await _softwareRepository.GetSoftware(softwareId);
+        Software? software = await _softwareRepository.GetSoftware(softwareId, cancellationToken);
         EnsureSoftwareExists(software, softwareId);
 
-        var income = await _contractRepository.GetIncomeForSoftware(softwareId, anticipatedIncomes);
+        var income = await _contractRepository.GetIncomeForSoftware(softwareId, anticipatedIncomes,
+            cancellationToken);
 
         return income;
     }
 
-    private async Task<decimal> GetWholeIncome(bool anticipatedIncomes)
+    private async Task<decimal> GetWholeIncome(bool anticipatedIncomes, CancellationToken cancellationToken)
     {
-        var income = await _contractRepository.GetWholeIncome(anticipatedIncomes);
+        var income = await _contractRepository.GetWholeIncome(anticipatedIncomes, cancellationToken);
 
         return income;
     }
@@ -73,7 +76,7 @@ public class IncomeService : IIncomeService
         }
     }
 
-    private static async Task<decimal> GetCurrencyRate(string currency)
+    private static async Task<decimal> GetCurrencyRate(string currency, CancellationToken cancellationToken)
     {
         var requestString = "https://api.exchangerate-api.com/v4/latest/PLN";
         var httpClient = new HttpClient();

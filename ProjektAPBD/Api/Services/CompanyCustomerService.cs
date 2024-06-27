@@ -17,7 +17,8 @@ public class CompanyCustomerService : ICompanyCustomerService
         _customerRepository = customerRepository;
     }
 
-    public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
+    public async Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto,
+        CancellationToken cancellationToken)
     {
         EnsureAddressIsNotEmpty(newCompanyCustomerDto.Address);
         EnsureEmailIsNotEmpty(newCompanyCustomerDto.Email);
@@ -28,20 +29,20 @@ public class CompanyCustomerService : ICompanyCustomerService
         EnsureKrsIsDigitsOnly(newCompanyCustomerDto);
         EnsureKrsLengthIsCorrect(newCompanyCustomerDto);
 
-        Company? company = await _companyRepository.GetCompany(newCompanyCustomerDto.Krs);
+        Company? company = await _companyRepository.GetCompany(newCompanyCustomerDto.Krs, cancellationToken);
         EnsureCompanyDoesNotExist(newCompanyCustomerDto, company);
 
         EnsureEmailIsCorrect(newCompanyCustomerDto.Email);
         EnsurePhoneNumberIsDigitsOnly(newCompanyCustomerDto.PhoneNumber);
         EnsurePhoneNumberLengthIsCorrect(newCompanyCustomerDto.PhoneNumber);
 
-        return await _customerRepository.CreateCompanyCustomer(newCompanyCustomerDto);
+        return await _customerRepository.CreateCompanyCustomer(newCompanyCustomerDto, cancellationToken);
     }
 
     public async Task<CompanyCustomerDto> UpdateCompanyCustomer(int id,
-                                                                UpdateCustomerCompanyDto updateCustomerCompanyDto)
+        UpdateCustomerCompanyDto updateCustomerCompanyDto, CancellationToken cancellationToken)
     {
-        Customer? customer = await _customerRepository.GetCustomer(id);
+        Customer? customer = await _customerRepository.GetCustomer(id, cancellationToken);
         EnsureCustomerExists(id, customer);
         EnsureCustomerIsCompany(customer);
 
@@ -61,7 +62,7 @@ public class CompanyCustomerService : ICompanyCustomerService
         if (updateCustomerCompanyDto.Name is not null)
             EnsureNameIsNotEmpty(updateCustomerCompanyDto.Name);
 
-        return await _customerRepository.UpdateCompanyCustomer(id, updateCustomerCompanyDto);
+        return await _customerRepository.UpdateCompanyCustomer(id, updateCustomerCompanyDto, cancellationToken);
     }
 
     private static void EnsureCompanyDoesNotExist(NewCompanyCustomerDto newCompanyCustomerDto, Company? company)

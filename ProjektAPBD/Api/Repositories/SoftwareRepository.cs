@@ -14,7 +14,7 @@ public class SoftwareRepository : ISoftwareRepository
         _context = context;
     }
 
-    public async Task<Software?> GetSoftware(int id)
+    public async Task<Software?> GetSoftware(int id, CancellationToken cancellationToken)
     {
         return await _context.Software.FirstOrDefaultAsync(s => s.SoftwareId.Equals(id));
     }
