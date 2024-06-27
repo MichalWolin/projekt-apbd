@@ -89,4 +89,41 @@ public class ContractRepository : IContractRepository
             Price = contract.Price,
         };
     }
+
+    public async Task<decimal> GetIncomeForSoftware(int softwareId, bool anticipatedIncomes)
+    {
+        var incomeFromSignedContracts = await _context.Contracts
+            .Where(c => c.SoftwareId.Equals(softwareId) && c.Signed.Equals(true))
+            .SumAsync(c => c.Price);
+
+        if (anticipatedIncomes)
+        {
+            var incomeFromUnsignedContracts = await _context.Contracts
+                .Where(c => c.SoftwareId.Equals(softwareId) && c.Signed.Equals(false)
+                                                            && c.EndDate > DateTime.Now)
+                .SumAsync(c => c.Price);
+
+            return incomeFromSignedContracts + incomeFromUnsignedContracts;
+        }
+
+        return incomeFromSignedContracts;
+    }
+
+    public async Task<decimal> GetWholeIncome(bool anticipatedIncomes)
+    {
+        var incomeFromSignedContracts = await _context.Contracts
+            .Where(c => c.Signed.Equals(true))
+            .SumAsync(c => c.Price);
+
+        if (anticipatedIncomes)
+        {
+            var incomeFromUnsignedContracts = await _context.Contracts
+                .Where(c => c.Signed.Equals(false) && c.EndDate > DateTime.Now)
+                .SumAsync(c => c.Price);
+
+            return incomeFromSignedContracts + incomeFromUnsignedContracts;
+        }
+
+        return incomeFromSignedContracts;
+    }
 }

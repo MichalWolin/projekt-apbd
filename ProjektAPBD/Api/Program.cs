@@ -27,6 +27,7 @@ builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
 builder.Services.AddScoped<ICompanyCustomerService, CompanyCustomerService>();
 builder.Services.AddScoped<IPersonCustomerService, PersonCustomerService>();
 builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
 
 var app = builder.Build();
 

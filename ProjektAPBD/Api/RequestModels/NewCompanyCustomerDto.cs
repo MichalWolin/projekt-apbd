@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Api.RequestModels;
+﻿namespace Api.RequestModels;
 
 public class NewCompanyCustomerDto
 {
