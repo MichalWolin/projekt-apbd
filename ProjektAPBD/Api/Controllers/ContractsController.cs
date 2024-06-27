@@ -1,5 +1,6 @@
 ﻿using Api.Interfaces;
 using Api.RequestModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -15,12 +16,14 @@ public class ContractsController : ControllerBase
         _contractService = contractService;
     }
 
+    [Authorize]
     [HttpPost("add")]
     public async Task<IActionResult> CreateContract(NewContractDto newContractDto)
     {
         return Ok(await _contractService.CreateContract(newContractDto));
     }
 
+    [Authorize]
     [HttpPost("pay")]
     public async Task<IActionResult> PayForContract(PaymentRequestDto paymentRequestDto)
     {

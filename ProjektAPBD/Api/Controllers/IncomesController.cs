@@ -1,8 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using Api.Interfaces;
-using Api.RequestModels;
-using Api.ResponseModels;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -18,6 +15,7 @@ public class IncomesController : ControllerBase
         _incomeService = incomeService;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetIncome(int? softwareId, bool anticipatedIncomes = false,
                                                 string currency = "PLN")

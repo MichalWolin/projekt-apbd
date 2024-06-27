@@ -1,5 +1,6 @@
 ﻿using Api.Interfaces;
 using Api.RequestModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,18 +17,21 @@ public class PersonCustomerController : ControllerBase
         _personCustomerService = personCustomerService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreatePersonCustomer(NewPersonCustomerDto newPersonCustomerDto)
     {
         return Ok(await _personCustomerService.CreatePersonCustomer(newPersonCustomerDto));
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdatePersonCustomer(int id, UpdatePersonCustomerDto updatePersonCustomerDto)
     {
         return Ok(await _personCustomerService.UpdatePersonCustomer(id, updatePersonCustomerDto));
     }
 
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePersonCustomer(int id)
     {

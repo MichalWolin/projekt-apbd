@@ -1,5 +1,6 @@
 ﻿using Api.Interfaces;
 using Api.RequestModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -15,12 +16,14 @@ public class CompanyCustomersController : ControllerBase
         _companyCustomerService = companyCustomerService;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto)
     {
         return Ok(await _companyCustomerService.CreateCompanyCustomer(newCompanyCustomerDto));
     }
 
+    [Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateCompanyCustomer(int id, UpdateCustomerCompanyDto updateCustomerCompanyDto)
     {
