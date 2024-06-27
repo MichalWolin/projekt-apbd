@@ -1,9 +1,12 @@
+using System.Text;
 using Api.Data;
 using Api.Interfaces;
 using Api.Middlewares;
 using Api.Repositories;
 using Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,12 +25,56 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // services
 builder.Services.AddScoped<ICompanyCustomerService, CompanyCustomerService>();
 builder.Services.AddScoped<IPersonCustomerService, PersonCustomerService>();
 builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromMinutes(2),
+        ValidIssuer = "https://localhost:5050",
+        ValidAudience = "https://localhost:5050",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
+    };
+
+    opt.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Token-expired", "true");
+            }
+            return Task.CompletedTask;
+        }
+    };
+}).AddJwtBearer("IgnoreTokenExpirationScheme",opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ClockSkew = TimeSpan.FromMinutes(2),
+        ValidIssuer = "https://localhost:5050",
+        ValidAudience = "https://localhost:5050",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
+    };
+});
 
 var app = builder.Build();
 
