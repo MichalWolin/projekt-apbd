@@ -11,7 +11,13 @@ public class FakePersonRepository : IPersonRepository
     {
         _persons = new List<Person>
         {
-
+            new Person
+            {
+                PersonId = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Pesel = "12345678901"
+            }
         };
     }
     public Task<Person?> GetPerson(string pesel, CancellationToken cancellationToken)

@@ -35,7 +35,13 @@ public class FakeCustomerRepository : ICustomerRepository
                 Email = "email@email.com",
                 PhoneNumber = "123456789",
                 IsDeleted = false,
-                PersonId = 1
+                PersonId = 1,
+                Person = new Person
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Pesel = "12345678901"
+                }
             },
             new Customer
             {
