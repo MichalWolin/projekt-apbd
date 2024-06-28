@@ -13,7 +13,30 @@ public class FakeCustomerRepository : ICustomerRepository
     {
         _customers = new List<Customer>
         {
-
+            new Customer
+            {
+                CustomerId = 1,
+                Address = "Address",
+                Email = "email@email.com",
+                PhoneNumber = "123456789",
+                IsDeleted = false,
+                CompanyId = 1,
+                Company = new Company
+                {
+                    CompanyId = 1,
+                    Name = "Name",
+                    Krs = "1234567890"
+                }
+            },
+            new Customer
+            {
+                CustomerId = 2,
+                Address = "Address",
+                Email = "email@email.com",
+                PhoneNumber = "123456789",
+                IsDeleted = false,
+                PersonId = 1
+            }
         };
     }
     public Task<CompanyCustomerDto> CreateCompanyCustomer(NewCompanyCustomerDto newCompanyCustomerDto,
