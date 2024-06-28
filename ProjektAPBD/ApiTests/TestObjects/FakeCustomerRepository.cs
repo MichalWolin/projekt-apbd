@@ -36,6 +36,15 @@ public class FakeCustomerRepository : ICustomerRepository
                 PhoneNumber = "123456789",
                 IsDeleted = false,
                 PersonId = 1
+            },
+            new Customer
+            {
+                CustomerId = 3,
+                Address = "Address",
+                Email = "email@email.com",
+                PhoneNumber = "123456789",
+                IsDeleted = true,
+                PersonId = 1
             }
         };
     }

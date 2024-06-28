@@ -11,7 +11,14 @@ public class FakeDiscountRepository : IDiscountRepository
     {
         _discounts = new List<Discount>
         {
-
+            new Discount
+            {
+                DiscountId = 1,
+                SoftwareId = 2,
+                Rate = 10,
+                StartDate = DateTime.Now.AddDays(-1),
+                EndDate = DateTime.Now.AddDays(1)
+            }
         };
     }
 

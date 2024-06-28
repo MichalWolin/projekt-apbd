@@ -13,7 +13,42 @@ public class FakeContractRepository : IContractRepository
     {
         _contracts = new List<Contract>
         {
-
+            new Contract
+            {
+                ContractId = 1,
+                CustomerId = 1,
+                SoftwareId = 1,
+                StartDate = DateTime.Now.AddDays(-1),
+                EndDate = DateTime.Now.AddDays(1),
+                Price = 100,
+                Paid = 100,
+                SupportEndDate = DateTime.Now.AddYears(1),
+                Signed = true
+            },
+            new Contract
+            {
+                ContractId = 2,
+                CustomerId = 2,
+                SoftwareId = 2,
+                StartDate = DateTime.Now.AddDays(-1),
+                EndDate = DateTime.Now.AddDays(1),
+                Price = 100,
+                Paid = 0,
+                SupportEndDate = DateTime.Now.AddYears(1),
+                Signed = false
+            },
+            new Contract
+            {
+                ContractId = 3,
+                CustomerId = 1,
+                SoftwareId = 2,
+                StartDate = DateTime.Now.AddYears(-1),
+                EndDate = DateTime.Now.AddYears(-1),
+                Price = 100,
+                Paid = 0,
+                SupportEndDate = DateTime.Now.AddYears(-1),
+                Signed = false
+            }
         };
     }
     public Task<Contract?> GetCustomersContract(int customerId, int softwareId, CancellationToken cancellationToken)
@@ -46,7 +81,7 @@ public class FakeContractRepository : IContractRepository
             EndDate = newContractDto.EndDate,
             Price = decimal.Round(price - (price * discount / 100), 2) + additionalSupport * 1000,
             Paid = 0,
-            SupportEndDate = DateTime.Today.AddYears(additionalSupport),
+            SupportEndDate = DateTime.Today.AddYears(1 + additionalSupport),
             Signed = false
         };
 

@@ -47,7 +47,7 @@ public class ContractRepository : IContractRepository
             EndDate = newContractDto.EndDate,
             Price = decimal.Round(price - (price * discount / 100), 2) + additionalSupport * 1000,
             Paid = 0,
-            SupportEndDate = DateTime.Today.AddYears(additionalSupport),
+            SupportEndDate = DateTime.Today.AddYears(1 + additionalSupport),
             Signed = false
         };
 

@@ -228,7 +228,7 @@ public class CompanyCustomerServiceTests
         };
 
         await Should.ThrowAsync<DomainException>
-            (_companyCustomerService.UpdateCompanyCustomer(3, command, CancellationToken.None));
+            (_companyCustomerService.UpdateCompanyCustomer(4, command, CancellationToken.None));
     }
 
     [Fact]
