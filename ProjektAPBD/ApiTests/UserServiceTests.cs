@@ -4,6 +4,7 @@ using Api.RequestModels;
 using Api.Services;
 using ApiTests.TestObjects;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using Shouldly;
 
 namespace ApiTests;
@@ -14,7 +15,9 @@ public class UserServiceTests
 
     public UserServiceTests()
     {
-        _userService = new UserService(new FakeUserRepository(), new ConfigurationBuilder().Build());
+        var mockConfig = new Mock<IConfiguration>();
+        mockConfig.Setup(x => x["Jwt:SecretKey"]).Returns("qkhdiuoahoijksdokjanokjwdnaoihasdasdasd");
+        _userService = new UserService(new FakeUserRepository(), mockConfig.Object);
     }
 
     [Fact]
